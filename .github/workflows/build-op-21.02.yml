@@ -128,7 +128,6 @@ jobs:
         path: openwrt/bin
 
     - name: Generate release tag
-      env: 
       id: tag
       if: !cancelled()   
       run: |
