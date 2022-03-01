@@ -109,7 +109,7 @@ jobs:
     #  working-directory: ./openwrt
     #  run: |
     #    git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon-jerrykuku
-    - name: Import external feeds - edge
+    - name: Import external feeds
       working-directory: ./openwrt
       run: |
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
