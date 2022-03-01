@@ -32,6 +32,20 @@ on:
   #watch:
   #  types: [started]
 
+env:
+ # REPO_URL: https://github.com/Lienol/openwrt
+ # REPO_BRANCH: 21.02
+ # FEEDS_CONF: feeds.conf.default
+ # CONFIG_FILE: 2102.config
+ # DIY_P1_SH: diy-part1-lienol.sh
+ # DIY_P2_SH: diy-p2-lienol.sh
+ # UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -125,7 +139,23 @@ jobs:
       with:
         name: OpenWrt
         path: openwrt/bin
-     
+ 
+    - name: Organize files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+
+#    - name: Upload firmware directory
+#      uses: actions/upload-artifact@main
+#      if: steps.organize.outputs.status == 'success' && !cancelled()
+#      with:
+#        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+#        path: ${{ env.FIRMWARE }}
+ 
     - name: Generate release tag
       env: 
         UPLOAD_COWTRANSFER: false
