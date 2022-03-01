@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_op_21.02_fb
+name: Build_op_main
 
 on:
   repository_dispatch:
@@ -31,6 +31,21 @@ on:
   
   #watch:
   #  types: [started]
+
+env:
+ # REPO_URL: https://github.com/Lienol/openwrt
+ # REPO_BRANCH: 21.02
+ # FEEDS_CONF: feeds.conf.default
+ # CONFIG_FILE: 2102.config
+ # DIY_P1_SH: diy-part1-lienol.sh
+ # DIY_P2_SH: diy-p2-lienol.sh
+ # UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
 
 jobs:
   build:
@@ -71,7 +86,7 @@ jobs:
     - name: Clone source code
       env: 
         REPO_URL: https://github.com/Lienol/openwrt
-        REPO_BRANCH: 21.02
+        REPO_BRANCH: main
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
@@ -98,6 +113,7 @@ jobs:
     - name: Import external feeds - edge
       working-directory: ./openwrt
       run: |
+        rm -rf ./package/feeds/kenzo/luci-theme-edge 
         git clone -b master https://github.com/kiddin9/luci-theme-edge package/luci-theme-edge
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
         git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
@@ -127,11 +143,23 @@ jobs:
         name: OpenWrt
         path: openwrt/bin
 
+    - name: Organize files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+
+#    - name: Upload firmware directory
+#      uses: actions/upload-artifact@main
+#      if: steps.organize.outputs.status == 'success' && !cancelled()
+#      with:
+#        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+#        path: ${{ env.FIRMWARE }}
+
     - name: Generate release tag
-      env: 
-        UPLOAD_COWTRANSFER: false
-        UPLOAD_WETRANSFER: false
-        UPLOAD_RELEASE: true
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
