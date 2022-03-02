@@ -114,9 +114,9 @@ jobs:
       working-directory: ./openwrt
       run: |
         rm -rf ./package/feeds/kenzo/luci-theme-edge 
-#        git clone -b master https://github.com/kiddin9/luci-theme-edge package/luci-theme-edge
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
         git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
+#       git clone -b master https://github.com/kiddin9/luci-theme-edge package/luci-theme-edge
 
     - name: Configuration Customization - Build_x86_64
       env:
