@@ -92,6 +92,10 @@ jobs:
         echo "src-git kenzo https://github.com/kenzok8/openwrt-packages.git" >> ./feeds.conf.default
         echo "src-git small https://github.com/kenzok8/small.git" >> ./feeds.conf.default
         sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.15/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.10/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+
 #        echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
         
     - name: Update & Install feeds
@@ -113,6 +117,7 @@ jobs:
     - name: Import external feeds
       working-directory: ./openwrt
       run: |
+        git clone https://github.com/sirpdboy/luci-theme-opentopd.git package/luci-theme-opentopd
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
         git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
 
