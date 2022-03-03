@@ -163,10 +163,6 @@ jobs:
 #        path: ${{ env.FIRMWARE }}
  
     - name: Generate release tag
-      env: 
-        UPLOAD_COWTRANSFER: false
-        UPLOAD_WETRANSFER: false
-        UPLOAD_RELEASE: true
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
