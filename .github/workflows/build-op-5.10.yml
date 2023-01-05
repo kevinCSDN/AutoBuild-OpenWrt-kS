@@ -16,7 +16,7 @@ on:
 #        required: false
 #        default: 'false'
   schedule:
-    - cron: 0 0 * * 5  
+    - cron: 0 0 5 * *  
   
   
 #  release:
@@ -194,13 +194,13 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+      uses: FunctionXJB/delete-workflow-runs@main
       with:
         retain_days: 2
         keep_minimum_runs: 3
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
+      uses: dev-drprasad/delete-older-releases@v0.2.0
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 9
