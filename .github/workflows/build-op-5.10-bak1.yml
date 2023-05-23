@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_op_5.10
+name: Build_op_5.10-bak1
 
 on:
   repository_dispatch:
@@ -32,7 +32,7 @@ on:
   #watch:
   #  types: [started]
 
-#env:
+env:
  # REPO_URL: https://github.com/Lienol/openwrt
  # REPO_BRANCH: 21.02
  # FEEDS_CONF: feeds.conf.default
@@ -40,11 +40,11 @@ on:
  # DIY_P1_SH: diy-part1-lienol.sh
  # DIY_P2_SH: diy-p2-lienol.sh
  # UPLOAD_BIN_DIR: true
- # UPLOAD_FIRMWARE: false
- # UPLOAD_COWTRANSFER: false
- # UPLOAD_WETRANSFER: false
- # UPLOAD_RELEASE: true
- # TZ: Asia/Shanghai
+  UPLOAD_FIRMWARE: false
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
 
 jobs:
   build:
@@ -157,10 +157,26 @@ jobs:
         path: openwrt/bin
  
       env: 
-    #    UPLOAD_FIRMWARE: true
+        UPLOAD_FIRMWARE: true
         UPLOAD_COWTRANSFER: false
         UPLOAD_WETRANSFER: false
         UPLOAD_RELEASE: true
+    - name: Organize files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+        
+
+#    - name: Upload firmware directory
+#      uses: actions/upload-artifact@main
+#      if: steps.organize.outputs.status == 'success' && !cancelled()
+#      with:
+#        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+#        path: ${{ env.FIRMWARE }}
  
     - name: Generate release tag
       id: tag
