@@ -33,14 +33,14 @@ on:
   #  types: [started]
 
 env:
- # REPO_URL: https://github.com/Lienol/openwrt
- # REPO_BRANCH: 21.02
- # FEEDS_CONF: feeds.conf.default
- # CONFIG_FILE: 2102.config
- # DIY_P1_SH: diy-part1-lienol.sh
- # DIY_P2_SH: diy-p2-lienol.sh
- # UPLOAD_BIN_DIR: true
-  UPLOAD_FIRMWARE: false
+  REPO_URL: https://github.com/Lienol/openwrt
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: x86_64.config
+  DIY_P1_SH: diy-p1-lede.sh
+  DIY_P2_SH: diy-p2-lede.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: false
   UPLOAD_RELEASE: true
@@ -78,6 +78,12 @@ jobs:
         echo "src-git kenzo https://github.com/kenzok8/openwrt-packages" >> ./feeds.conf.default
         echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >> ./feeds.conf.default
         echo "src-git ssrp https://github.com/fw876/helloworld" >> ./feeds.conf.default
+        sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.10/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=5.15/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+        sed -i 's/KERNEL_TESTING_PATCHVER:=6.1/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile        
     #    echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
        
     - name: Update & Install feeds
@@ -105,12 +111,7 @@ jobs:
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
     #    git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
     #    git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
-        sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
-        sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
-        sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=5.10/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=5.15/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
-        sed -i 's/KERNEL_TESTING_PATCHVER:=6.1/KERNEL_TESTING_PATCHVER:=5.4/g' ./target/linux/x86/Makefile
+
         
     - name: Configuration Customization - Build_x86_64
       env:
