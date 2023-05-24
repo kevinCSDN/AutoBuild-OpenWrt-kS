@@ -111,7 +111,6 @@ jobs:
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
     #    git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
     #    git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
-
         
     - name: Configuration Customization - Build_x86_64
       env:
