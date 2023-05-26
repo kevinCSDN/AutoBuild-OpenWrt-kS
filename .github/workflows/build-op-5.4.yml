@@ -51,6 +51,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 43008
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+
+    #steps:
     - name: Checkout
       uses: actions/checkout@master
 
@@ -88,6 +97,7 @@ jobs:
         vim wget xmlto xxd zlib1g-dev
         sudo -E apt-get -y autoremove --purge
         sudo -E apt-get clean
+        sudo timedatectl set-timezone "$TZ"
 
     - name: Clone source code
       env: 
