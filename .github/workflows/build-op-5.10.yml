@@ -157,10 +157,33 @@ jobs:
         path: openwrt/bin
  
       env: 
-    #    UPLOAD_FIRMWARE: true
+        UPLOAD_FIRMWARE: true
         UPLOAD_COWTRANSFER: false
         UPLOAD_WETRANSFER: false
         UPLOAD_RELEASE: true
+ 
+    - name: Organize files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rm -rf packages && mkdir packages
+        find -name "*esxi-flat.vmdk*" | xargs -i mv -f {} packages
+        find -name "*kernel.bin*" | xargs -i mv -f {} packages
+        find -name "*rootfs*" | xargs -i mv -f {} packages
+        find -name "*.manifest*" | xargs -i mv -f {} packages
+        find -name "*vmlinuz*" | xargs -i mv -f {} packages
+        find -name "*esxi.vmdk*" | xargs -i mv -f {} packages        
+        rm -rf packages
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "status=success" >> $GITHUB_OUTPUT
+
+    - name: Upload firmware directory
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: ${{ env.FIRMWARE }}
  
     - name: Generate release tag
       id: tag
@@ -186,8 +209,8 @@ jobs:
     - name: Delete workflow runs
       uses: FunctionXJB/delete-workflow-runs@main
       with:
-        retain_days: 2
-        keep_minimum_runs: 3
+        retain_days: 45
+        keep_minimum_runs: 5
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
