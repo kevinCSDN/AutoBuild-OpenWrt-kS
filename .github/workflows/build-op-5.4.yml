@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_op_5.4
+name: Build_op_5.4-2in1
 
 on:
   repository_dispatch:
