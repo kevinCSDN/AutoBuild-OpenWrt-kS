@@ -145,7 +145,7 @@ jobs:
         git clone -b 18.06 https://github.com/kiddin9/luci-theme-edge package/luci-theme-edge
         git clone https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
         git clone https://github.com/sirpdboy/luci-app-autotimeset package/luci-app-autotimeset
-    #    git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
+        git clone https://github.com/sirpdboy/luci-app-wizard package/luci-app-wizard
     #    git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
         
     - name: Configuration Customization - Build_x86_64
@@ -293,7 +293,7 @@ jobs:
     - name: Delete workflow runs
       uses: FunctionXJB/delete-workflow-runs@main
       with:
-        retain_days: 150
+        retain_days: 99
         keep_minimum_runs: 5
 
     - name: Remove old Releases
