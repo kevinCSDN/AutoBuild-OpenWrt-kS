@@ -180,7 +180,7 @@ jobs:
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
-#        find -name "*profiles.json*" | xargs -i rm -rf {}
+    #    find -name "*profiles.json*" | xargs -i rm -rf {}
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
