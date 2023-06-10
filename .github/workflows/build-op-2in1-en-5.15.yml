@@ -10,15 +10,6 @@ name: Build_op-2in1-en-5.15
 on:
   repository_dispatch:
   workflow_dispatch:
-#    inputs:
-#      ssh:
-#        description: 'SSH connection to Actions'
-#        required: false
-#        default: 'false'
-#  schedule:
-#    - cron: 0 0 5 * *  
-  
-  
 #  release:
 #    types: [published]
 
@@ -26,8 +17,8 @@ on:
 #    branches: 
 #      - master
 
-  schedule:
-    - cron: 5 15 * * 5
+#  schedule:
+#    - cron: 5 15 * * 5
   
   #watch:
   #  types: [started]
