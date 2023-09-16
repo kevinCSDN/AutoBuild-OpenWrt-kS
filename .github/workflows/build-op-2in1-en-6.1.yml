@@ -98,6 +98,7 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         ./scripts/feeds install -a
+    #调整&&去重,删除不使用的源文件
         rm -rf ./feeds/luci/applications/luci-app-netdata
         rm -rf ./package/lean/autosamba
 
