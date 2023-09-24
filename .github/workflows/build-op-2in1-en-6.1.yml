@@ -92,7 +92,7 @@ jobs:
     #    echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default
     #    echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
         
-    - name: Update & Install feeds & del double feeds    #调整&&去重,删除不使用的源文件
+    - name: Update & Install feeds & del double feeds 
       working-directory: ./openwrt
       run: |
         ./scripts/feeds update -a
@@ -101,11 +101,11 @@ jobs:
         rm -rf ./package/lean/autosamba
         rm -rf ./package/feeds/applications/luci-app-netdata
 
-    - name: Import external feeds
+    - name: Import external feeds 
       working-directory: ./openwrt
       run: |
 		git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
-    
+        
     #- name: Import external feeds - passwall
     #  working-directory: ./openwrt
     #  run: |
