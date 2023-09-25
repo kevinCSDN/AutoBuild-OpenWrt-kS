@@ -213,13 +213,13 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-     - name: Delete workflow runs
-       uses: Mattraks/delete-workflow-runs@v2
-       with:
-         token: ${{ github.token }}
-         repository: ${{ github.repository }}
-         retain_days: 10
-         keep_minimum_runs: 5
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 10
+        keep_minimum_runs: 5
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
