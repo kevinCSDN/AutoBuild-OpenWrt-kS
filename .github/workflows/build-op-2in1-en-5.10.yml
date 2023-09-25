@@ -109,8 +109,8 @@ jobs:
 
     #调整&&去重,删除不使用的源文件
     - name: Import external feeds & del double feeds #调整&&去重,删除不使用的源文件
+      working-directory: ./openwrt
       run: |
-        cd openwrt
         rm -rf ./package/lean/autosamba
         rm -rf ./package/feeds/applications/luci-app-netdata
         git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
@@ -215,13 +215,14 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+    - name: Delete releases and workflows runs
+      uses: ophub/delete-releases-workflows@main
       with:
-        token: ${{ secrets.REPO_TOKEN }}
-        repository: ${{ github.repository }}
-        retain_days: 10
-        keep_minimum_runs: 5
+        del_releases: false
+        releases_keep_latest: 9
+        del_workflows: true
+        workflows_keep_day: 10
+        gh_token: ${{ secrets.REPO_TOKEN }}
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
