@@ -106,7 +106,7 @@ jobs:
     - name: Import external feeds 
       working-directory: ./openwrt
       run: |
-        git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
+        git clone https://github.com/sirpdboy/luci-app-netdata ./package/luci-app-netdata
       
     #- name: Import external feeds - passwall
     #  working-directory: ./openwrt
