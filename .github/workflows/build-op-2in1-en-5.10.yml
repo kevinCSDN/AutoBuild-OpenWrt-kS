@@ -211,14 +211,11 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete releases and workflows runs
-      uses: ophub/delete-releases-workflows@main
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
       with:
-        del_releases: false
-        releases_keep_latest: 9
-        del_workflows: true
-        workflows_keep_day: 10
-        gh_token: ${{ secrets.REPO_TOKEN }}
+        retain_days: 1
+        keep_minimum_runs: 2
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
