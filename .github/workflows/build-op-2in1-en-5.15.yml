@@ -222,7 +222,7 @@ jobs:
       with:
         token: ${{ secrets.REPO_TOKEN }}
         repository: ${{ github.repository }}
-        keep_minimum_runs: 10
+        keep_minimum_runs: 15
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
