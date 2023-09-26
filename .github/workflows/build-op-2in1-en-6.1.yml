@@ -215,7 +215,7 @@ jobs:
       with:
         token: ${{ secrets.REPO_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 10
+        retain_days: 20
         keep_minimum_runs: 5
         
     - name: Remove old Releases
