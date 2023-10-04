@@ -17,6 +17,3 @@
 		sed -i "s/hostname='OpenWrt'/hostname='OpenWrt-kS'/g" openwrt/package/base-files/files/bin/config_generate
 #
 #
-#
-#
-#
