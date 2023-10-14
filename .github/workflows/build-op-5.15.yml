@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_op-2in1-en-6.1
+name: Build_op-5.15
 
 on:
   repository_dispatch:
@@ -18,7 +18,7 @@ on:
 #      - master
 
   schedule:
-    - cron: 6 17 */5 * *
+    - cron: 0 1 */2 * *
   
   #watch:
   #  types: [started]
@@ -90,9 +90,16 @@ jobs:
         git clone https://github.com/sirpdboy/autosamba package/autosamba
         git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
         git clone -b 18.06 https://github.com/kiddin9/luci-theme-edge.git package/luci-theme-edge
-
+        sed -i 's/PATCHVER:=6.1/PATCHVER:=5.15/g' target/linux/x86/Makefile
     #    sed -i '$a src-git diypkg https://github.com/14link/diy-package' feeds.conf.default
-       
+
+    #    sed -i 's/PATCHVER:=5.15/PATCHVER:=5.4/g' target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_PATCHVER:=5.10/KERNEL_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_TESTING_PATCHVER:=5.10/KERNEL_TESTING_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
+    #    sed -i 's/KERNEL_TESTING_PATCHVER:=6.1/KERNEL_TESTING_PATCHVER:=5.15/g' ./target/linux/x86/Makefile
     #    echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >> ./feeds.conf.default
     #    echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default
     #    echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
@@ -111,7 +118,7 @@ jobs:
     #  working-directory: ./openwrt
     #  run: |
     #    git clone https://github.com/sirpdboy/luci-app-netdata ./package/luci-app-netdata
-     
+
     #- name: Import external feeds - passwall
     #  working-directory: ./openwrt
     #  run: |
@@ -207,19 +214,17 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        name: ${{ env.FILE_TIME }} 「 openwrt-6.1-X86-64 」     
+        name: ${{ env.FILE_TIME }} 「 openwrt-5.15-X86-64 」     
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+      uses: Mattraks/delete-workflow-runs@main
       with:
-        token: ${{ secrets.REPO_TOKEN }}
-        repository: ${{ github.repository }}
         retain_days: 20
         keep_minimum_runs: 0
-        
+
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()

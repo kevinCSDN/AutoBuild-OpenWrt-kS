@@ -5,7 +5,7 @@
 # Youtube Channel: https://goo.gl/fvkdwm 
 #=================================================
 
-name: Build_op-2in1-en-5.10
+name: Build_op-6.1
 
 on:
   repository_dispatch:
@@ -18,7 +18,7 @@ on:
 #      - master
 
   schedule:
-    - cron: 0 5 */2 * *
+    - cron: 6 17 */5 * *
   
   #watch:
   #  types: [started]
@@ -86,23 +86,17 @@ jobs:
         cd openwrt
         echo "src-git kenzo https://github.com/kenzok8/openwrt-packages" >> ./feeds.conf.default
         echo "src-git small https://github.com/kenzok8/small" >> ./feeds.conf.default
-        sed -i '$a src-git diypkg https://github.com/14link/diy-package' ./feeds.conf.default
+        echo "src-git diypkg https://github.com/14link/diy-package" >> ./feeds.conf.default
         git clone https://github.com/sirpdboy/autosamba package/autosamba
         git clone https://github.com/sirpdboy/luci-app-netdata package/luci-app-netdata
         git clone -b 18.06 https://github.com/kiddin9/luci-theme-edge.git package/luci-theme-edge
-        sed -i 's/PATCHVER:=5.15/PATCHVER:=5.10/g' target/linux/x86/Makefile
-        sed -i 's/PATCHVER:=6.1/PATCHVER:=5.10/g' target/linux/x86/Makefile
 
-    #    sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
-    #    sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
-    #    sed -i 's/KERNEL_PATCHVER:=6.1/KERNEL_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
-    #    sed -i 's/KERNEL_TESTING_PATCHVER:=5.15/KERNEL_TESTING_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
-    #    sed -i 's/KERNEL_TESTING_PATCHVER:=5.4/KERNEL_TESTING_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
-    #    sed -i 's/KERNEL_TESTING_PATCHVER:=6.1/KERNEL_TESTING_PATCHVER:=5.10/g' ./target/linux/x86/Makefile
+    #    sed -i '$a src-git diypkg https://github.com/14link/diy-package' feeds.conf.default
+       
     #    echo "src-git passwall https://github.com/xiaorouji/openwrt-passwall" >> ./feeds.conf.default
     #    echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default
     #    echo "src-git ssrp https://github.com/fw876/helloworld.git" >> ./feeds.conf.default
-    
+        
     - name: Update & Install feeds & del double feeds #调整&&去重,删除不使用的源文件
       working-directory: ./openwrt
       run: |
@@ -111,10 +105,13 @@ jobs:
         ./scripts/feeds install -a
         rm -rf ./package/lean/autosamba
         rm -rf ./package/feeds/applications/luci-app-netdata
+        
     #调整&&去重,删除不使用的源文件
+    #- name: Import external feeds 
+    #  working-directory: ./openwrt
+    #  run: |
+    #    git clone https://github.com/sirpdboy/luci-app-netdata ./package/luci-app-netdata
      
-#		git clone https://github.com/sirpdboy/luci-app-netdata openwrt/package/luci-app-netdata
-
     #- name: Import external feeds - passwall
     #  working-directory: ./openwrt
     #  run: |
@@ -152,7 +149,9 @@ jobs:
       working-directory: ./openwrt
       run: |
         echo -e "$(nproc) thread build."
-        make -j$(nproc) || make -j1 || make -j1 V=s
+        make -j$(nproc) V=s
+    #    echo -e "$(nproc) thread build."
+    #    make -j$(nproc) || make -j1 || make -j1 V=s
 
     - name: Check space usage
       if: (!cancelled())
@@ -175,7 +174,7 @@ jobs:
         find -name "*rootfs*" | xargs -i mv -f {} packages
         find -name "*.manifest*" | xargs -i mv -f {} packages
         find -name "*vmlinuz*" | xargs -i mv -f {} packages
-        find -name "*esxi.vmdk*" | xargs -i mv -f {} packages        
+        find -name "*esxi.vmdk*" | xargs -i mv -f {} packages      
         find -name "*sha256sums*" | xargs -i rm -rf {}
         find -name "*version.buildinfo*" | xargs -i rm -rf {}
         find -name "*feeds.buildinfo*" | xargs -i rm -rf {}
@@ -208,17 +207,19 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        name: ${{ env.FILE_TIME }} 「 openwrt-5.10-X86-64 」     
+        name: ${{ env.FILE_TIME }} 「 openwrt-6.1-X86-64 」     
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@v2
       with:
+        token: ${{ secrets.REPO_TOKEN }}
+        repository: ${{ github.repository }}
         retain_days: 20
         keep_minimum_runs: 0
-
+        
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@master
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
