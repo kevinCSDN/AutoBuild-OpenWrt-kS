@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: Delete workflow-Action-bak
+name: Delete workflow-Action
 
 on:
   repository_dispatch:
