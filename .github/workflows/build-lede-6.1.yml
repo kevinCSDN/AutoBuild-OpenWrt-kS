@@ -46,7 +46,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Check Server Performance
       run: |
         echo "警告⚠"
@@ -79,7 +78,6 @@ jobs:
 
     - name: Checkout OpenWrt
       uses: actions/checkout@v3
-
         
     - name: Clone source code
       env: 
